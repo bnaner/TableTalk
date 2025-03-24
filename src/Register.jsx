@@ -12,13 +12,25 @@ const Register = () => {
   const navigate = useNavigate();
 
   // Form submission handler
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({ fullName, email, password });
-    // Add your registration logic here
-    
-    // Navigate to login page after registration
-    navigate('/login');
+    try {
+      const response = await fetch('/insert', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: fullName, email, password }),
+      });
+      if (response.ok) {
+        console.log('Registration successful');
+        navigate('/login');
+      } else {
+        console.error('Registration failed');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   // Toggle password visibility

@@ -8,20 +8,18 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   
-  // Initialize the navigate function from React Router
   const navigate = useNavigate();
 
   // Form submission handler
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log({ email, password, rememberMe });
-    // Add your authentication logic here
     
     // Navigate to home page after login
     navigate('/home');
   };
 
-  // Toggle password visibility
+  // Toggle password visibility (help from W3schools)
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -128,7 +126,7 @@ const Login = () => {
   );
 };
 
-// All styles as a JavaScript object
+// Styles as a JavaScript object
 const styles = {
   app: {
     backgroundColor: '#f5f5f5',

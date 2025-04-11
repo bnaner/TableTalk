@@ -2,17 +2,15 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  // State variables
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(''); // Change name to email
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-  
   const navigate = useNavigate();
 
-  // Form submission handler
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     console.log({ email, password, rememberMe });
     
     // Navigate to home page after login
@@ -20,11 +18,30 @@ const Login = () => {
   };
 
   // Toggle password visibility (help from W3schools)
+    try {
+      const response = await fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }), // Use email instead of name
+      });
+      const data = await response.text(); // Change to text to handle non-JSON responses
+      console.log('Response:', data);
+      if (response.ok) {
+        navigate('/home');
+      } else {
+        alert('Login failed');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  
-  // Navigate to register page
+
   const goToRegister = (e) => {
     e.preventDefault();
     navigate('/register');
@@ -67,9 +84,9 @@ const Login = () => {
             <input 
               type="email" 
               id="email" 
-              placeholder="example@gmail.com"
+              placeholder="Your email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)} // Use setEmail instead of setName
               required
               style={styles.input}
             />
@@ -127,6 +144,7 @@ const Login = () => {
 };
 
 // Styles as a JavaScript object
+
 const styles = {
   app: {
     backgroundColor: '#f5f5f5',

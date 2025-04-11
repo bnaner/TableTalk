@@ -1,0 +1,15 @@
+{
+  "name": "tabletalk-backend",
+  "version": "1.0.1",
+  "description": "Backend for TableTalk",
+  "main": "server.js",
+  "scripts": {
+    "server": "node server.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "express": "^4.17.1",
+    "mongodb": "^3.6.3"
+  }
+}

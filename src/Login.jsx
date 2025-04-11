@@ -3,39 +3,33 @@ import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState(''); // Change name to email
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    console.log({ email, password, rememberMe });
     
-    // Navigate to home page after login
-    navigate('/home');
-  };
-
-  // Toggle password visibility (help from W3schools)
-    try {
-      const response = await fetch('/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }), // Use email instead of name
-      });
-      const data = await response.text(); // Change to text to handle non-JSON responses
-      console.log('Response:', data);
-      if (response.ok) {
+    // Use .then/.catch instead of async/await to fix babel error
+    fetch('/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    })
+      .then(response => {
+        return response.text();
+      })
+      .then(data => {
+        console.log('Response:', data);
         navigate('/home');
-      } else {
+      })
+      .catch(error => {
+        console.error('Error:', error);
         alert('Login failed');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
+      });
   };
 
   const togglePasswordVisibility = () => {
@@ -86,7 +80,7 @@ const Login = () => {
               id="email" 
               placeholder="Your email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)} // Use setEmail instead of setName
+              onChange={(e) => setEmail(e.target.value)}
               required
               style={styles.input}
             />
@@ -142,8 +136,6 @@ const Login = () => {
     </div>
   );
 };
-
-// Styles as a JavaScript object
 
 const styles = {
   app: {

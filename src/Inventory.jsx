@@ -1,8 +1,8 @@
-
 import React, { useState } from "react";
+import Navbar from "./Components/Navbar.jsx";
 
 const Inventory = () => {
-  // State for modal visibility
+  // State for modal visibility (model is the create game popup)
   const [showModal, setShowModal] = useState(false);
   
   // State for form inputs
@@ -12,12 +12,11 @@ const Inventory = () => {
   // State for games list (initially empty)
   const [games, setGames] = useState([]);
 
-  // Handle opening 
+  // Handle opening and closing
   const openNewGameModal = () => {
     setShowModal(true);
   };
 
-  // Handle closing 
   const closeModal = () => {
     setShowModal(false);
     // Reset form fields when closing
@@ -43,39 +42,13 @@ const Inventory = () => {
 
   return (
     <div style={styles.inventoryPage}>
-      {/* Top navigation */}
-      <div style={styles.navbar}>
-        <div style={styles.navbarContainer}>
-          <div style={styles.logo}>
-            <h1 style={styles.logoText}>Table Talk</h1>
-          </div>
-          <div style={styles.navLinks}>
-            <a href="#home" style={styles.navLink}>Home</a>
-            <a href="#inventory" style={{...styles.navLink, ...styles.activeNavLink}}>Inventory</a>
-            <a href="#review" style={styles.navLink}>Review</a>
-            <a href="#about" style={styles.navLink}>About</a>
-            <a href="#create-event" style={styles.navLink}>Create Event</a>
-          </div>
-        </div>
-      </div>
+      {/* Use the Navbar component */}
+      <Navbar activePage="inventory" />
       
       <div style={styles.contentContainer}>
         {/* Left sidebar */}
         <div style={styles.sidebar}>
           {/* Blue sidebar */}
-=======
-import React from "react";
-import Navbar from './Components/Navbar';
-
-
-function Inventory() {
-    return ( 
-        <div class="container">
-            <Navbar />
-            {/* Main Content */}
-            <div class="content">
-                <h1 class="heading">This is the Inventory page!</h1>
-            </div>
         </div>
 
         {/* Main content */}
@@ -189,57 +162,6 @@ const styles = {
     fontFamily: 'Arial, sans-serif',
   },
   
-  // Navigation bar
-  navbar: {
-    width: '100%',
-    backgroundColor: '#1a1a2e', // Dark navy color for the navigation bar
-    padding: 0,
-  },
-  navbarContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    maxWidth: '1200px',
-    margin: '0 auto',
-    padding: '12px 20px',
-  },
-  logo: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  logoText: {
-    color: '#ffd700', // Golden yellow color for the logo
-    fontSize: '24px',
-    fontWeight: 'bold',
-    margin: 0,
-  },
-  navLinks: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  navLink: {
-    color: 'white',
-    textDecoration: 'none',
-    padding: '8px 16px',
-    margin: '0 4px',
-    fontSize: '16px',
-    position: 'relative',
-  },
-  activeNavLink: {
-    fontWeight: 'bold',
-    position: 'relative',
-    ':after': {
-      content: '""',
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      width: '100%',
-      height: '3px',
-      backgroundColor: '#ffd700', // Golden yellow underline
-    },
-    borderBottom: '3px solid #ffd700', 
-  },
-  
   // Main content layout
   contentContainer: {
     display: 'flex',
@@ -249,7 +171,7 @@ const styles = {
   // Sidebar
   sidebar: {
     width: '70px',
-    backgroundColor: '#1a1a2e',
+    backgroundColor: '#2c2c44',
     height: '100%',
   },
   

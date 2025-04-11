@@ -105,7 +105,7 @@ app.post('/login', async (req, res) => {
     }
 });
 
-  app.post('/insertGame', async (req, res) => {
+app.post('/insertGame', async (req, res) => {
     const { name, rating, description, comments, genre } = req.body; //takes in name, rating, description, comments, genre. Maybe subject to change
     try {
         const collection = database.collection('games'); //get collection
@@ -123,14 +123,30 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.put('/updateGame', async (req, res) => {
-    const { name, newRating, newComment } = req.body;
+app.put('/updateGameRating', async (req, res) => {
+    const {name, newRating} = req.body;
     try {
         const collection = database.collection('games');
         const filter = { name };
         const updateDoc = {
             $push: {
                 rating: newRating, //push rating into array
+            }
+        };
+        await collection.updateOne(filter, updateDoc);
+        res.status(200).send('Game updated successfully.');
+    } catch (e) {
+        res.status(500).send(`Update game failed: ${e.message}`);
+    }
+});
+
+app.put('/updateGameComments', async (req, res) => {
+    const {name, newComment} = req.body;
+    try {
+        const collection = database.collection('games');
+        const filter = { name };
+        const updateDoc = {
+            $push: {
                 comments: newComment // push comment into array
             }
         };

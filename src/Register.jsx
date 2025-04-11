@@ -2,35 +2,35 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
-  // State variables
+  // Variables
   const [showPassword, setShowPassword] = useState(false);
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   
-  // Initialize the navigate function from React Router
   const navigate = useNavigate();
 
-  // Form submission handler
-  const handleSubmit = async (e) => {
+  // Form submission handler 
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      const response = await fetch('/insert', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name: fullName, email, password }),
+    fetch('/insert', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: fullName, email, password }),
+    })
+      .then(response => {
+        if (response.ok) {
+          console.log('Registration successful');
+          navigate('/login');
+        } else {
+          console.error('Registration failed');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
       });
-      if (response.ok) {
-        console.log('Registration successful');
-        navigate('/login');
-      } else {
-        console.error('Registration failed');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
   };
 
   // Toggle password visibility
@@ -125,7 +125,7 @@ const Register = () => {
         </form>
         
         <div style={styles.loginLink}>
-          Already on Table Talk? <a href="#" onClick={goToLogin} style={styles.loginAnchor}>Login</a>
+          Already have an account? <button onClick={goToLogin} style={{...styles.loginAnchor, background: 'none', border: 'none', padding: 0, cursor: 'pointer'}}>Login</button>
         </div>
       </div>
     </div>

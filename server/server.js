@@ -123,6 +123,38 @@ app.post('/insertGame', async (req, res) => {
     }
 });
 
+app.post('/CreateGroup', async (req, res) => {
+    const { name, people } = req.body; //takes in name, and people in it
+    try {
+        const collection = database.collection('groups'); //get collection
+        const doc = { 
+            name, 
+            people: [people] //same here
+        };
+        await collection.insertOne(doc);
+        res.status(200).send('Group created successfully.');
+    } catch (e) {
+        res.status(500).send(`Create group failed: ${e.message}`);
+    }
+});
+
+app.put('/updateGroupPeople', async (req, res) => {
+    const {name, newPeople} = req.body;
+    try {
+        const collection = database.collection('groups');
+        const filter = { name };
+        const updateDoc = {
+            $push: {
+                people: newPeople, //push rating into array
+            }
+        };
+        await collection.updateOne(filter, updateDoc);
+        res.status(200).send('Game updated successfully.');
+    } catch (e) {
+        res.status(500).send(`Update game failed: ${e.message}`);
+    }
+});
+
 app.put('/updateGameRating', async (req, res) => {
     const {name, newRating} = req.body;
     try {

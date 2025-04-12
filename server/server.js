@@ -126,24 +126,22 @@ app.post('/insertGame', async (req, res) => {
 app.get('/findGame', async (req, res) => {
     try {
         const collection = database.collection('games');
-        const games = await collection.find({}); //find all games and return as json
-        res.status(200).json(games);
-    } 
-    catch (e) {
-        res.status(500).send(`Find game failed: ${e.message}`);
+        const games = await collection.find({}).toArray(); // Retrieve all games from the 'games' collection
+
+        const gamesWithAverageRating = games.map(game => {
+            const ratings = game.rating || []; // Use the 'rating' array or an empty array if undefined
+            const averageRating = ratings.length > 0
+                ? ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length // Calculate the average rating
+                : 0; // Default to 0 if there are no ratings
+            return { ...game, averageRating }; // Return the game object with an added 'averageRating' field
+        });
+
+        res.status(200).json(gamesWithAverageRating); // Send the games with average ratings as a JSON response
+    } catch (e) {
+        res.status(500).send(`Find game failed: ${e.message}`); // Handle errors and send a 500 status
     }
 });
 
-//this would return something like this:
-// [
-//     {
-//         name: "Game1",
-//         rating: [5, 4, 3],
-//         description: "This is a game",
-//         comments: ["This is a comment"],
-//         genre: "Action"
-//     }
-// ]  
 
 app.post('/CreateGroup', async (req, res) => {
     const { name, people } = req.body; //takes in name, and people in it

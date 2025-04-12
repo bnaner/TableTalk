@@ -123,6 +123,28 @@ app.post('/insertGame', async (req, res) => {
     }
 });
 
+app.get('/findGame', async (req, res) => {
+    try {
+        const collection = database.collection('games');
+        const games = await collection.find({}); //find all games and return as json
+        res.status(200).json(games);
+    } 
+    catch (e) {
+        res.status(500).send(`Find game failed: ${e.message}`);
+    }
+});
+
+//this would return something like this:
+// [
+//     {
+//         name: "Game1",
+//         rating: [5, 4, 3],
+//         description: "This is a game",
+//         comments: ["This is a comment"],
+//         genre: "Action"
+//     }
+// ]  
+
 app.post('/CreateGroup', async (req, res) => {
     const { name, people } = req.body; //takes in name, and people in it
     try {

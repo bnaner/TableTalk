@@ -30,14 +30,36 @@ const Inventory = () => {
     
     // Create a new game object
     const newGame = {
-      id: Date.now(), // Use timestamp as unique id (might delete and add names as ID to include multiple)
       name: gameName,
-      genre: gameGenre
+      genre: gameGenre,
+      rating: 0,
+      description: "",
+      comments: []
     };
-    
-    // Add the new game to the games array
-    setGames([...games, newGame]);
-    closeModal();
+
+    fetch('/insertGame', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newGame),
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to insert game');
+        }
+        return response.text();
+      })
+      .then(data => {
+        console.log('Game inserted successfully:', data);
+        // Add the new game to the games array
+        setGames([...games, newGame]);
+        closeModal();
+      })
+      .catch((error) => {
+        console.error('Error inserting game:', error);
+        alert('Failed to insert game. Please try again.');
+      })
   };
 
   return (

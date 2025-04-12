@@ -142,6 +142,17 @@ app.get('/findGame', async (req, res) => {
     }
 });
 
+//this would return something like 
+//[
+//    {
+//    "name": "Chess",
+//    "rating": [5, 4, 3],
+//    "description": "A classic strategy game.",
+//    "comments": ["Great game!", "Timeless classic."],
+//    "genre": "Strategy",
+//    "averageRating": 4
+//    }
+//]
 
 app.post('/CreateGroup', async (req, res) => {
     const { name, people } = req.body; //takes in name, and people in it

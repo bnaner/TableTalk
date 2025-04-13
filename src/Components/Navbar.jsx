@@ -8,6 +8,7 @@ function Navbar() {
     const goToHome = () => navigate('/home');
     const goToInventory = () => navigate('/inventory');
     const goToDiscussions = () => navigate('/discussions');
+    const goToGroups = () => navigate('/groups');
     const goToLogin = () => navigate('/login');
     return (
     <div>
@@ -18,6 +19,7 @@ function Navbar() {
           <button onClick={goToHome} style={styles.navLink}>Home</button>
           <button onClick={goToInventory} style={styles.navLink}>Inventory</button>
           <button onClick={goToDiscussions} style={styles.navLink}>Discussions</button>
+          <button onClick={goToGroups} style={styles.navLink}>Groups</button>
           <button onClick={() => {}} style={styles.navLink}>About</button>
           <button onClick={() => {}} style={styles.navLink}>Create Event</button>
           <button onClick={goToLogin} style={styles.navLink}>Logout</button>

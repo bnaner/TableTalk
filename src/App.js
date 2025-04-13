@@ -5,6 +5,7 @@ import Register from "./Register";
 import Home from './Home';
 import Inventory from "./Inventory";
 import Discussions from "./Discussions";
+import GroupPage from "./GroupPage";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/inventory" element={<Inventory />} />
         <Route path="/discussions" element={<Discussions />} />
+        <Route path="/groups" element={<GroupPage />} />
         {/* Add this route to make Login the landing page */}
         <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>

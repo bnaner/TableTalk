@@ -41,39 +41,40 @@ const GroupPage = () => {
       <Navbar />
       <div className="content">
         <h1 className="heading">Groups</h1>
-        
-        <div className="group-button-container">
-          <input
-            type="text"
-            value={groupName}
-            onChange={(e) => setGroupName(e.target.value)}
-            placeholder="Enter group name"
-          />
-          <button className="groupBtn" onClick={handleCreateGroup}>
-            Create Group
-          </button>
-          <button className="groupBtn" onClick={handleJoinGroup}>
-            Join Group
-          </button>
-          <button className="groupBtn" onClick={handleLeaveGroup}>
-            Leave Group
-          </button>
-        </div>
+        <div className="group-section">
+          <div className="group-button-container">
+            <input
+              type="text"
+              value={groupName}
+              onChange={(e) => setGroupName(e.target.value)}
+              placeholder="Enter group name"
+            />
+            <button className="groupBtn" onClick={handleCreateGroup}>
+              Create Group
+            </button>
+            <button className="groupBtn" onClick={handleJoinGroup}>
+              Join Group
+            </button>
+            <button className="groupBtn" onClick={handleLeaveGroup}>
+              Leave Group
+            </button>
+          </div>
 
-        <div style={{ marginTop: "30px", textAlign: "left" }}>
-          <h3>All Groups:</h3>
-          <ul>
-            {allGroups.map((group, index) => (
-              <li key={index}>{group}</li>
-            ))}
-          </ul>
+          <div className="group-list">
+            <h3>All Groups:</h3>
+            <ul>
+              {allGroups.map((group, index) => (
+                <li key={index}>{group}</li>
+              ))}
+            </ul>
 
-          <h3>Your Groups:</h3>
-          <ul>
-            {yourGroups.map((group, index) => (
-              <li key={index}>{group}</li>
-            ))}
-          </ul>
+            <h3>Your Groups:</h3>
+            <ul>
+              {yourGroups.map((group, index) => (
+                <li key={index}>{group}</li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </div>

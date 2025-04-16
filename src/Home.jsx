@@ -9,7 +9,7 @@ const Home = () => {
       <Navbar /> 
       {/* Main Content */}
       <div class="content">
-        <h1 class="heading">This is the Home page!</h1>
+        <h1 class="heading">Welcome to Table Talk!</h1>
         {/* About Section */}
         <div className="about-section">
           <h2>What's Table Talk?</h2>

@@ -8,6 +8,7 @@ const Inventory = () => {
   // State for form inputs
   const [gameName, setGameName] = useState('');
   const [gameGenre, setGameGenre] = useState('');
+  const [gameImage, setGameImage] = useState('');
   
   // State for games list (initially empty)
   const [games, setGames] = useState([]);
@@ -22,6 +23,7 @@ const Inventory = () => {
     // Reset form fields when closing
     setGameName('');
     setGameGenre('');
+    setGameImage('');
   };
 
   // Handle form submission
@@ -30,6 +32,7 @@ const Inventory = () => {
     
     // Create a new game object
     const newGame = {
+      image: gameImage,
       name: gameName,
       genre: gameGenre,
       rating: 0,
@@ -100,6 +103,7 @@ const Inventory = () => {
             {games.length > 0 ? (
               games.map(game => (
                 <div key={game.id} style={styles.gameCard}>
+                  <img style={styles.gameImage} src={game.image} />
                   <div style={styles.gameName}>{game.name}</div>
                   <div style={styles.gameGenre}>{game.genre}</div>
                 </div>
@@ -148,6 +152,18 @@ const Inventory = () => {
                   onChange={(e) => setGameGenre(e.target.value)}
                   style={styles.input}
                   placeholder="Enter game genre"
+                  required
+                />
+              </div>
+              <div style={styles.formGroup}>
+                <label htmlFor="game-image" style={styles.label}>Image</label>
+                <input
+                  id="game-image"
+                  type="text"
+                  value={gameImage}
+                  onChange={(e) => setGameImage(e.target.value)}
+                  style={styles.input}
+                  placeholder="Enter Image URL"
                   required
                 />
               </div>
@@ -272,6 +288,11 @@ const styles = {
     ':hover': {
       transform: 'translateY(-5px)',
     },
+  },
+  gameImage:{
+    maxWidth: '100%',
+    maxHeight: '100%',
+    borderRadius: '8px'
   },
   gameName: {
     fontSize: '18px',

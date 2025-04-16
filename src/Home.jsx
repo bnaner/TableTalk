@@ -24,19 +24,19 @@ const Home = () => {
           <div className="team-grid">
             <div className="team-member">
               <img src="/JakeHeadshot.jpg" alt="Jake" />
-              <p>Jake</p>
+              <p>Jake Liguori</p>
             </div>
             <div className="team-member">
               <img src="/LaythHeadshot.jpg" alt="Layth" />
-              <p>Layth</p>
+              <p>Layth Ghnaim</p>
             </div>
             <div className="team-member">
               <img src="/MichaelHeadshot.jpg" alt="Michael" />
-              <p>Michael</p>
+              <p>Michael Mallo</p>
             </div>
             <div className="team-member">
               <img src="/NagendraHeadshot.jpg" alt="Nagendra" />
-              <p>Nagendra</p>
+              <p>Nagendra Vishnumolakala</p>
             </div>
           </div>
         </div>

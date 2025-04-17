@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Navbar from "./Components/Navbar.jsx";
+import './styles.css'
 
 const Inventory = () => {
   // State for modal visibility (model is the create game popup)
@@ -66,17 +67,12 @@ const Inventory = () => {
   };
 
   return (
-    <div style={styles.inventoryPage}>
+    <div className="container">
       {/* Use the Navbar component */}
       <Navbar activePage="inventory" />
       
-      <div style={styles.contentContainer}>
-        {/* Left sidebar */}
-        <div style={styles.sidebar}>
-          {/* Blue sidebar */}
-        </div>
-
-        {/* Main content */}
+      {/* Main content - Removed sidebar */}
+      <div style={styles.mainContentWrapper}>
         <div style={styles.mainContent}>
           <div style={styles.inventoryHeader}>
             <h2 style={styles.inventoryHeading}>Boardgame Inventory</h2>
@@ -103,7 +99,7 @@ const Inventory = () => {
             {games.length > 0 ? (
               games.map(game => (
                 <div key={game.id} style={styles.gameCard}>
-                  <img style={styles.gameImage} src={game.image} />
+                  <img style={styles.gameImage} src={game.image} alt={game.name} />
                   <div style={styles.gameName}>{game.name}</div>
                   <div style={styles.gameGenre}>{game.genre}</div>
                 </div>
@@ -193,31 +189,15 @@ const Inventory = () => {
 
 // All styles as a JavaScript object
 const styles = {
-  inventoryPage: {
+  mainContentWrapper: {
     width: '100%',
-    minHeight: '100vh',
-    backgroundColor: '#f8f8f8',
-    fontFamily: 'Arial, sans-serif',
-  },
-  
-  // Main content layout
-  contentContainer: {
-    display: 'flex',
-    height: 'calc(100vh - 60px)', // Total height minus navbar height
-  },
-  
-  // Sidebar
-  sidebar: {
-    width: '70px',
-    backgroundColor: '#2c2c44',
-    height: '100%',
+    padding: '0',
   },
   
   mainContent: {
-    flex: 1,
     padding: '20px',
     backgroundColor: 'white',
-    height: '100%',
+    minHeight: 'calc(100vh - 60px)', // Total height minus navbar height
     overflowY: 'auto',
   },
   inventoryHeader: {

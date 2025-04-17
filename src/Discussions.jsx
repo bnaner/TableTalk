@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Navbar from './Components/Navbar';
+import './styles.css'
 
 function Discussions() {
     const [showPopup, setShowPopup] = useState(false);

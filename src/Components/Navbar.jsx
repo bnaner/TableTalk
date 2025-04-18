@@ -20,7 +20,6 @@ function Navbar() {
           <button onClick={goToInventory} style={styles.navLink}>Inventory</button>
           <button onClick={goToDiscussions} style={styles.navLink}>Discussions</button>
           <button onClick={goToGroups} style={styles.navLink}>Groups</button>
-          <button onClick={() => {}} style={styles.navLink}>Create Event</button>
           <button onClick={goToLogin} style={styles.navLink}>Logout</button>
         </div>
       </div>

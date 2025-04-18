@@ -18,6 +18,7 @@ function Discussions() {
             id: Date.now(),
             title,
             description,
+            posterName: "User",  // Default poster name
             comments: [],
         };
         
@@ -84,6 +85,10 @@ function Discussions() {
                                     <h3 style={styles.postTitle}>{post.title}</h3>
                                     <p style={styles.postDescription}>{post.description}</p>
                                     <div style={styles.postFooter}>
+                                    <div style={styles.posterInfo}>
+                                            <span style={styles.posterLabel}>Poster Name</span>
+                                            <span style={styles.required}>*</span>
+                                        </div>
                                         <div style={styles.commentsCount}>{post.comments.length} comments</div>
                                     </div>
                                 </div>
@@ -239,10 +244,21 @@ const styles = {
     },
     postFooter: {
         display: 'flex',
-        justifyContent: 'flex-end',
+        justifyContent: 'space-between',
         alignItems: 'center',
         fontSize: '0.9rem',
     },
+posterInfo: {
+    display: 'flex',
+    alignItems: 'center',
+},
+posterLabel: {
+    color: '#ddd',
+},
+required: {
+    color: '#4a90e2',
+    marginLeft: '4px',
+},
     commentsCount: {
         color: '#aaa',
     },

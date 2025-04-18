@@ -125,15 +125,20 @@ app.get('/profile', (req, res) => {
 });
 
 app.post('/insertGame', async (req, res) => {
-    const { name, rating, description, comments, genre } = req.body; //takes in name, rating, description, comments, genre. Maybe subject to change
+    const { name, rating, description, comments, genre, image } = req.body; 
     try {
-        const collection = database.collection('games'); //get collection
+        const collection = database.collection('games');
+        const existingGame = await collection.findOne({ name });
+        if (existingGame) {
+            return res.status(400).send('Game with this name already exists.');
+        }
         const doc = { 
             name, 
-            rating: [rating], //init as an array
+            rating: [rating], 
             description, 
-            comments: [comments], //same here
-            genre 
+            comments: [comments], 
+            genre,
+            image 
         };
         await collection.insertOne(doc);
         res.status(200).send('Game inserted successfully.');

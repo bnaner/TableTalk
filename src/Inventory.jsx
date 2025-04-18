@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import Navbar from "./Components/Navbar.jsx";
 import './styles.css'
 
@@ -27,6 +28,23 @@ const Inventory = () => {
     setGameImage('');
   };
 
+  useEffect(() => {
+    fetch('/findGame')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch games');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setGames(data); // Populate the games state with data from the backend
+      })
+      .catch(error => {
+        console.error('Error fetching games:', error);
+        alert('Failed to load games. Please try again.');
+      });
+  }, []);
+
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -41,6 +59,7 @@ const Inventory = () => {
       comments: []
     };
 
+
     fetch('/insertGame', {
       method: 'POST',
       headers: {
@@ -50,10 +69,13 @@ const Inventory = () => {
     })
       .then(response => {
         if (!response.ok) {
-          throw new Error('Failed to insert game');
+          return response.text().then(text => {
+            throw new Error(text || 'Failed to insert game');
+          });
         }
         return response.text();
       })
+
       .then(data => {
         console.log('Game inserted successfully:', data);
         // Add the new game to the games array
@@ -98,12 +120,13 @@ const Inventory = () => {
           <div style={styles.inventoryList}>
             {games.length > 0 ? (
               games.map(game => (
-                <div key={game.id} style={styles.gameCard}>
+                <div key={game._id} style={styles.gameCard}>
                   <img style={styles.gameImage} src={game.image} alt={game.name} />
                   <div style={styles.gameName}>{game.name}</div>
                   <div style={styles.gameGenre}>{game.genre}</div>
                 </div>
               ))
+
             ) : (
               <div style={styles.emptyState}>No games in your inventory yet.</div>
             )}

@@ -7,9 +7,19 @@ const port = 5000;
 const uri = "mongodb+srv://Admin1:pass98@tabletalk-mongo.vh4ln.mongodb.net/";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
+
 let database;
 
 app.use(express.json());
+
+const session = require('express-session');
+
+app.use(session({
+    secret: '9b1c2f3e4d5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
+}));
 
 app.post('/insert', async (req, res) => {
     const { name, email, profileMessage, groups, password } = req.body;
@@ -93,6 +103,7 @@ app.post('/login', async (req, res) => {
         const passwordMatch = await bcrypt.compare(password, user.password); //compare password to hashed password
         console.log('Password match:', passwordMatch);
         if (passwordMatch) {
+          req.session.userEmail = email; // Store email in session
           res.status(200).send('Login successful.');
         } else {
           res.status(401).send('Invalid email or password.');
@@ -102,6 +113,14 @@ app.post('/login', async (req, res) => {
       }
     } catch (e) {
       res.status(500).send(`Login failed: ${e.message}`);
+    }
+});
+
+app.get('/profile', (req, res) => {
+    if (req.session.userEmail) {
+        res.status(200).send(req.session.userEmail); // Return only the email
+    } else {
+        res.status(401).send('Not logged in.');
     }
 });
 

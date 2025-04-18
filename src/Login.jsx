@@ -19,16 +19,24 @@ const Login = () => {
       },
       body: JSON.stringify({ email, password }),
     })
-      .then(response => {
-        return response.text();
-      })
+
+    .then(response => {
+      if (!response.ok) {
+        // If the response status is not OK (e.g., 401), throw an error
+        return response.text().then(text => {
+          throw new Error(text || 'Login failed');
+        });
+      }
+      return response.text(); // If successful, return the response text
+    })
+
       .then(data => {
         console.log('Response:', data);
         navigate('/home');
       })
       .catch(error => {
         console.error('Error:', error);
-        alert('Login failed');
+        alert(error.message);
       });
   };
 

@@ -193,6 +193,45 @@ app.post('/CreateGroup', async (req, res) => {
     }
 });
 
+app.get('/getAllGroups', async (req, res) => {
+    try {
+        const collection = database.collection('groups');
+        const groups = await collection.find({}).toArray(); 
+        res.status(200).json(groups); 
+    } catch (e) {
+        res.status(500).send(`Failed to fetch all groups: ${e.message}`);
+    }
+});
+
+app.get('/getUserGroups', async (req, res) => {
+    const { user } = req.query; 
+    try {
+        const collection = database.collection('groups'); 
+        const userGroups = await collection.find({ people: user }).toArray(); 
+        res.status(200).json(userGroups); 
+    } catch (e) {
+        res.status(500).send(`Failed to fetch user groups: ${e.message}`);
+    }
+});
+
+app.put('/removeUserFromGroup', async (req, res) => {
+    const { name, user } = req.body; // Group name and the user to remove
+    try {
+        const collection = database.collection('groups'); // Get the groups collection
+        const filter = { name }; // Find the group by name
+        const updateDoc = {
+            $pull: { people: user }, // Remove the user from the 'people' array
+        };
+        const result = await collection.updateOne(filter, updateDoc); // Update the group
+        if (result.modifiedCount === 0) {
+            return res.status(404).send('Group not found or user not in group.');
+        }
+        res.status(200).send('User removed from group successfully.');
+    } catch (e) {
+        res.status(500).send(`Failed to remove user from group: ${e.message}`);
+    }
+});
+
 app.put('/updateGroupPeople', async (req, res) => {
     const {name, newPeople} = req.body;
     try {

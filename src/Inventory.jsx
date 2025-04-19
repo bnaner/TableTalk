@@ -13,6 +13,7 @@ const Inventory = () => {
   const [gameImage, setGameImage] = useState('');
   const [gameDescription, setGameDescription] = useState('');
   const [gameRating, setGameRating] = useState('');
+  const [gameConstraint, setGameConstraint] = useState(new RegExp(''));
 
   
   // State for games list (initially empty)
@@ -122,6 +123,14 @@ const Inventory = () => {
     })
   }
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (e.key === 'Enter'){
+      const search = document.getElementById("searchBar").value;
+      setGameConstraint(RegExp(search, 'i'));
+    }
+  }
+
   return (
     <div className="container">
       {/* Use the Navbar component */}
@@ -131,7 +140,7 @@ const Inventory = () => {
       <div style={styles.mainContentWrapper}>
         <div style={styles.mainContent}>
           <div style={styles.inventoryHeader}>
-            <h2 style={styles.inventoryHeading}>Boardgame Inventory</h2>
+            <h2 style={styles.inventoryHeading}>Honors Tabletop Inventory</h2>
             <button 
               style={styles.newGameBtn}
               onClick={openNewGameModal}
@@ -144,16 +153,18 @@ const Inventory = () => {
             <div style={styles.searchBox}>
               <span style={styles.searchIcon}>🔍</span>
               <input 
+                id="searchBar"
                 type="text" 
                 placeholder="Search" 
                 style={styles.searchInput}
+                onKeyUp={handleSearch}
               />
             </div>
           </div>
           
           <div style={styles.inventoryList}>
             {games.length > 0 ? (
-              games.map(game => (
+              games.filter(game => gameConstraint.test(game.name)).map(game => (
                 <div key={game.name} style={styles.gameCard}>
                   <img style={styles.gameImage} src={game.image} alt={game.name} />
                   <div style={styles.gameName}>{game.name}

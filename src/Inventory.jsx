@@ -11,6 +11,9 @@ const Inventory = () => {
   const [gameName, setGameName] = useState('');
   const [gameGenre, setGameGenre] = useState('');
   const [gameImage, setGameImage] = useState('');
+  const [gameDescription, setGameDescription] = useState('');
+  const [gameRating, setGameRating] = useState('');
+
   
   // State for games list (initially empty)
   const [games, setGames] = useState([]);
@@ -26,6 +29,8 @@ const Inventory = () => {
     setGameName('');
     setGameGenre('');
     setGameImage('');
+    setGameDescription('');
+    setGameRating('');
   };
 
   useEffect(() => {
@@ -54,8 +59,8 @@ const Inventory = () => {
       image: gameImage,
       name: gameName,
       genre: gameGenre,
-      rating: 0,
-      description: "",
+      rating: gameRating,
+      description: gameDescription,
       comments: []
     };
 
@@ -87,6 +92,35 @@ const Inventory = () => {
         alert('Failed to insert game. Please try again.');
       })
   };
+
+  const handleDelete = (e, selected) => {
+    e.preventDefault();
+
+    const selectedGame = {name: selected};
+    fetch('/deleteGame', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(selectedGame),
+    }).then(response => {
+      if (!response.ok) {
+        return response.text().then(text => {
+          throw new Error(text || 'Failed to delete game');
+        });
+      }
+      return response.text();
+    })
+    .then(data => {
+      console.log('Game deleted successfully:', data);
+      // Remove game from games array
+      setGames(games.filter(game => game.name !== selected));
+    })
+    .catch((error) => {
+      console.error('Error deleting game:', error);
+      alert('Failed to delete game.');
+    })
+  }
 
   return (
     <div className="container">
@@ -120,10 +154,18 @@ const Inventory = () => {
           <div style={styles.inventoryList}>
             {games.length > 0 ? (
               games.map(game => (
-                <div key={game._id} style={styles.gameCard}>
+                <div key={game.name} style={styles.gameCard}>
                   <img style={styles.gameImage} src={game.image} alt={game.name} />
-                  <div style={styles.gameName}>{game.name}</div>
+                  <div style={styles.gameName}>{game.name}
+                    <span style={styles.gameRating}>
+                    {game.rating} / 10
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c8/Black_Star.svg" style={styles.gameStar} alt='a star'/>
+                    </span>
+                  </div>
                   <div style={styles.gameGenre}>{game.genre}</div>
+                  <br />
+                  <div style={styles.gameDescription}>{game.description}</div>
+                  <button style={styles.gameDelete} onClick={(e) => handleDelete(e, game.name)}>- Delete Game</button>
                 </div>
               ))
 
@@ -182,7 +224,19 @@ const Inventory = () => {
                   value={gameImage}
                   onChange={(e) => setGameImage(e.target.value)}
                   style={styles.input}
-                  placeholder="Enter Image URL"
+                  placeholder="Enter image url"
+                  required
+                />
+              </div>
+              <div style={styles.formGroup}>
+                <label htmlFor="game-description" style={styles.label}>Description</label>
+                <input
+                  id="game-description"
+                  type="text"
+                  value={gameDescription}
+                  onChange={(e) => setGameDescription(e.target.value)}
+                  style={styles.input}
+                  placeholder="Enter game description"
                   required
                 />
               </div>
@@ -282,9 +336,12 @@ const styles = {
     padding: '10px 0',
   },
   gameCard: {
+    width: '250px',
+    height: '350px',
     backgroundColor: '#f9f9f9',
     borderRadius: '8px',
     padding: '16px',
+    position: 'relative',
     boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
     transition: 'transform 0.2s ease',
     cursor: 'pointer',
@@ -294,8 +351,10 @@ const styles = {
   },
   gameImage:{
     maxWidth: '100%',
-    maxHeight: '100%',
-    borderRadius: '8px'
+    maxHeight: '200px',
+    borderRadius: '8px',
+    display: 'block',
+    margin: 'auto',
   },
   gameName: {
     fontSize: '18px',
@@ -303,9 +362,38 @@ const styles = {
     marginBottom: '8px',
     color: '#1a1a2e',
   },
+  gameRating: {
+    fontSize: '14px',
+    float: 'right',
+    textIndent: '2px',
+  },
+  gameStar: {
+    height: '12px',
+    width: '12px',
+  },
   gameGenre: {
     fontSize: '14px',
     color: '#666',
+  },
+  gameDescription: {
+    fontSize: '12px',
+    color: '#666',
+  },
+  gameDelete: {
+    float: 'right',
+    fontSize: '14px',
+    backgroundColor: '#1a1a2e', 
+    color: 'white',
+    border: 'none',
+    padding: '3px 6px',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontWeight: 'bold',
+    display: 'flex',
+    alignItems: 'right',
+    position: 'absolute',
+    right: '8px',
+    bottom: '8px',
   },
   emptyState: {
     gridColumn: '1 / -1',

@@ -147,6 +147,24 @@ app.post('/insertGame', async (req, res) => {
     }
 });
 
+app.post('/deleteGame', async (req, res) => {
+    const {name} = req.body;
+    try{
+        const collection = database.collection('games');
+        const existingGame = await collection.findOne({name});
+        if (existingGame){
+            await collection.deleteOne({name});
+            res.status(200).send('Game deleted successfully.');
+        }
+        else{
+            return res.status(400).send("Game with this name doesn't exist");
+        }
+    }
+    catch{
+        res.status(500).send(`Delete game failed: ${e.message}`);
+    }
+});
+
 app.get('/findGame', async (req, res) => {
     try {
         const collection = database.collection('games');

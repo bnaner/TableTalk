@@ -301,6 +301,87 @@ app.put('/updateGameComments', async (req, res) => {
     }
 });
 
+app.post('/createDiscussion', async (req, res) => {
+    const { title, description, posterName } = req.body;
+    try {
+        const collection = database.collection('discussions'); 
+        const doc = {
+            title,
+            description,
+            posterName,
+            comments: [], // Initialize with an empty comments array
+            createdAt: new Date(), // Add a timestamp
+        };
+        await collection.insertOne(doc); // Save the discussion to the database
+        res.status(200).json({ message: 'Discussion created successfully.' });    } 
+        catch (e) {
+        res.status(500).send(`Failed to create discussion: ${e.message}`);
+    }
+});
+
+app.get('/getDiscussions', async (req, res) => {
+    try {
+        const collection = database.collection('discussions'); 
+        const discussions = await collection.find({}).toArray(); 
+        res.status(200).json(discussions); 
+    } catch (e) {
+        res.status(500).send(`Failed to fetch discussions: ${e.message}`);
+    }
+});
+
+app.put('/addComment', async (req, res) => {
+    const { discussionId, comment } = req.body; // Extract discussion ID and comment details
+    try {
+        const collection = database.collection('discussions');
+        const filter = { _id: new ObjectId(discussionId) }; // Find the discussion by its ID
+        const updateDoc = {
+            $push: {
+                comments: {
+                    ...comment, // Include the comment details (text, author, etc.)
+                    createdAt: new Date(), // Add a timestamp
+                },
+            },
+        };
+        const result = await collection.updateOne(filter, updateDoc); // Add the comment to the discussion
+        if (result.modifiedCount === 0) {
+            return res.status(404).send('Discussion not found.');
+        }
+        res.status(200).send('Comment added successfully.');
+    } catch (e) {
+        res.status(500).send(`Failed to add comment: ${e.message}`);
+    }
+});
+
+app.delete('/deleteDiscussion', async (req, res) => {
+    const { discussionId } = req.body; 
+    try {
+        const collection = database.collection('discussions'); 
+        const filter = { _id: new MongoClient.ObjectId(discussionId) };
+        const result = await collection.deleteOne(filter); 
+        if (result.deletedCount === 0) {
+            return res.status(404).send('Discussion not found.');
+        }
+        res.status(200).send('Discussion deleted successfully.');
+    } catch (e) {
+        res.status(500).send(`Failed to delete discussion: ${e.message}`);
+    }
+});
+
+app.get('/getDiscussion', async (req, res) => {
+    const { discussionId } = req.query; 
+    try {
+        const collection = database.collection('discussions'); 
+        const discussion = await collection.findOne({ _id: new MongoClient.ObjectId(discussionId) }); // Find the discussion by its ID
+        if (!discussion) {
+            return res.status(404).send('Discussion not found.');
+        }
+        res.status(200).json(discussion); 
+    } catch (e) {
+        res.status(500).send(`Failed to fetch discussion: ${e.message}`);
+    }
+});
+
+        
 app.listen(port, async () => {
     try {
         await client.connect();

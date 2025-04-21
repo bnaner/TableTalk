@@ -1,29 +1,76 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from './Components/Navbar';
 import './styles.css'
 
 function Discussions() {
     const [showPopup, setShowPopup] = useState(false);
-    const [showComments, setShowComments] = useState(null); // ID of discussion to show comments for
+    const [showComments, setShowComments] = useState(null); 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [commentText, setCommentText] = useState("");
     const [posts, setPosts] = useState([]);
+    const [username, setUsername] = useState(""); 
+
+    useEffect(() => {
+        fetch('/profile')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Failed to fetch user profile');
+            }
+            return response.text(); // Assuming the backend returns the username as plain text
+          })
+          .then(data => {
+            setUsername(data); // Set the username in state
+          })
+          .catch(error => {
+            console.error('Error fetching user profile:', error);
+            alert('Failed to load user profile. Please try again.');
+          });
+      }, []);
+
+    useEffect(() => {
+        fetch('/getDiscussions')
+            .then(response => response.json())
+            .then(data => setPosts(data))
+            .catch(error => console.error('Error fetching discussions:', error));
+    }, []);
+
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
         
         // Create a new post with the form data
         const newPost = {
-            id: Date.now(),
             title,
             description,
-            posterName: "User",  // Default poster name
+            posterName: username,  // Default poster name
             comments: [],
         };
-        
-        // Add the new post to the posts array
-        setPosts([...posts, newPost]);
+
+        fetch('/createDiscussion', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newPost),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to create post');
+            }
+            return response.test();
+        })
+        .then(() => {
+            setPosts([...posts, { ...newPost, comments: [] }]); // Add the new post to the state
+            setTitle('');
+            setDescription('');
+            setShowPopup(false);
+        })
+        .catch(error => {
+            console.error('Error creating discussion:', error);
+            alert('Failed to create discussion. Please try again.');
+        });
         
         // Reset the form and close the popup
         setTitle("");
@@ -33,28 +80,35 @@ function Discussions() {
 
     const addComment = (postId) => {
         if (!commentText.trim()) return;
-
-        // Find the post and add the comment
-        const updatedPosts = posts.map(post => {
-            if (post.id === postId) {
-                return {
-                    ...post,
-                    comments: [
-                        ...post.comments,
-                        {
-                            id: Date.now(),
-                            text: commentText,
-                            author: "User",
-                            date: new Date().toLocaleDateString()
-                        }
-                    ]
-                };
-            }
-            return post;
-        });
-
-        setPosts(updatedPosts);
-        setCommentText("");
+        const newComment = {
+            text: commentText,
+            author: username, 
+            createdAt: new Date().toLocaleDateString(),
+        };
+        fetch('/addComment', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ discussionId: postId, comment: newComment }),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to add comment');
+                }
+                return response.text();
+            })
+            .then(() => {
+                setPosts(posts.map(post => {
+                    if (post._id === postId) {
+                        return { ...post, comments: [...post.comments, newComment] };
+                    }
+                    return post;
+                }));
+                setCommentText('');
+            })
+            .catch(error => {
+                console.error('Error adding comment:', error);
+                alert('Failed to add comment. Please try again.');
+            });
     };
 
     return (
@@ -103,13 +157,10 @@ function Discussions() {
                                         <p style={styles.noComments}>No comments yet. Be the first to comment!</p>
                                     ) : (
                                         <div style={styles.commentsList}>
-                                            {post.comments.map(comment => (
-                                                <div key={comment.id} style={styles.commentCard}>
-                                                    <div style={styles.commentHeader}>
-                                                        <span style={styles.commentAuthor}>{comment.author}</span>
-                                                        <span style={styles.commentDate}>{comment.date}</span>
-                                                    </div>
-                                                    <p style={styles.commentText}>{comment.text}</p>
+                                            {post.comments.map((comment, index) => (
+                                                <div key={index} style={styles.commentCard}>
+                                                    <p><strong>{comment.author}</strong>: {comment.text}</p>
+                                                    <p style={styles.commentDate}>{comment.createdAt}</p>
                                                 </div>
                                             ))}
                                         </div>

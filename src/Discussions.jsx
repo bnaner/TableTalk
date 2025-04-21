@@ -133,24 +133,23 @@ function Discussions() {
                     {posts.map(post => (
                         <div key={post._id}>
                             <div 
-                                style={{...styles.discussionCard, marginBottom: showComments === post.id ? '0' : '20px'}}
-                                onClick={() => setShowComments(showComments === post.id ? null : post.id)}
+                                style={{...styles.discussionCard, marginBottom: showComments === post._id ? '0' : '20px'}}
+                                onClick={() => setShowComments(showComments === post._id ? null : post._id)}
                             >
                                 <div style={styles.discussionContent}>
                                     <h3 style={styles.postTitle}>{post.title}</h3>
                                     <p style={styles.postDescription}>{post.description}</p>
                                     <div style={styles.postFooter}>
                                     <div style={styles.posterInfo}>
-                                            <span style={styles.posterLabel}>Poster Name</span>
-                                            <span style={styles.required}>*</span>
-                                        </div>
-                                        <div style={styles.commentsCount}>{post.comments.length} comments</div>
+                                        <span style={styles.posterLabel}> Author: {post.posterName}</span> 
+                                    </div>
+                                    <div style={styles.commentsCount}>{post.comments.length} comments</div>
                                     </div>
                                 </div>
                             </div>
                             
                             {/* Comments section - only visible when clicked */}
-                            {showComments === post.id && (
+                            {showComments === post._id && (
                                 <div style={styles.commentsSection}>
                                     <h3 style={styles.commentsTitle}>Comments</h3>
                                     

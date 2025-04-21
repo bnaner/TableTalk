@@ -20,7 +20,8 @@ function Discussions() {
             return response.text(); // Assuming the backend returns the username as plain text
           })
           .then(data => {
-            setUsername(data); // Set the username in state
+            console.log('Fetched username:', data); 
+            setUsername(data); 
           })
           .catch(error => {
             console.error('Error fetching user profile:', error);
@@ -44,7 +45,7 @@ function Discussions() {
         const newPost = {
             title,
             description,
-            posterName: username,  // Default poster name
+            posterName: username,  
             comments: [],
         };
 
@@ -59,9 +60,10 @@ function Discussions() {
             if (!response.ok) {
                 throw new Error('Failed to create post');
             }
-            return response.test();
+            return response.json(); // Use response.json() if the backend returns JSON
         })
         .then(() => {
+            console.log('Post created successfully'); // Log success
             setPosts([...posts, { ...newPost, comments: [] }]); // Add the new post to the state
             setTitle('');
             setDescription('');
@@ -72,7 +74,6 @@ function Discussions() {
             alert('Failed to create discussion. Please try again.');
         });
         
-        // Reset the form and close the popup
         setTitle("");
         setDescription("");
         setShowPopup(false);
@@ -130,7 +131,7 @@ function Discussions() {
                 {/* Display posts */}
                 <div>
                     {posts.map(post => (
-                        <div key={post.id}>
+                        <div key={post._id}>
                             <div 
                                 style={{...styles.discussionCard, marginBottom: showComments === post.id ? '0' : '20px'}}
                                 onClick={() => setShowComments(showComments === post.id ? null : post.id)}
@@ -176,7 +177,7 @@ function Discussions() {
                                         />
                                         <button 
                                             style={styles.addCommentBtn}
-                                            onClick={() => addComment(post.id)}
+                                            onClick={() => addComment(post._id)}
                                         >
                                             Post Comment
                                         </button>

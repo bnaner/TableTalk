@@ -330,19 +330,19 @@ app.get('/getDiscussions', async (req, res) => {
 });
 
 app.put('/addComment', async (req, res) => {
-    const { discussionId, comment } = req.body; // Extract discussion ID and comment details
+    const { discussionId, comment } = req.body; 
     try {
         const collection = database.collection('discussions');
-        const filter = { _id: new ObjectId(discussionId) }; // Find the discussion by its ID
+        const filter = { _id: new ObjectId(discussionId) }; 
         const updateDoc = {
             $push: {
                 comments: {
-                    ...comment, // Include the comment details (text, author, etc.)
-                    createdAt: new Date(), // Add a timestamp
+                    ...comment, 
+                    createdAt: new Date(),
                 },
             },
         };
-        const result = await collection.updateOne(filter, updateDoc); // Add the comment to the discussion
+        const result = await collection.updateOne(filter, updateDoc); 
         if (result.modifiedCount === 0) {
             return res.status(404).send('Discussion not found.');
         }

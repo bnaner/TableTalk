@@ -331,7 +331,6 @@ app.get('/getDiscussions', async (req, res) => {
 
 app.put('/addComment', async (req, res) => {
     const { discussionId, comment } = req.body;
-
     try {
         const collection = database.collection('discussions');
         const filter = { _id: new ObjectId(discussionId) }; // Convert discussionId to ObjectId
@@ -341,16 +340,7 @@ app.put('/addComment', async (req, res) => {
                     ...comment,
                     createdAt: new Date(), // Add a timestamp
                 },
-            },            curl -X PUT http://localhost:5000/addComment \
-            -H "Content-Type: application/json" \
-            -H "Cookie: connect.sid=your-session-id" \
-            -d '{
-                "discussionId": "64e8f9c2b5d1e2f3a4b5c6d7",
-                "comment": {
-                    "text": "This is a test comment",
-                    "author": "TestUser"
-                }
-            }'
+            },
         };
         const result = await collection.updateOne(filter, updateDoc);
         if (result.modifiedCount === 0) {
